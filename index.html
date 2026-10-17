@@ -4,6 +4,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#f2f3f5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="初见">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
 <title>𝓛𝓸𝓿𝓮.初见</title>
 <style>
 :root{--bg-color:#f2f3f5;--card-bg:rgba(255,255,255,0.9);--text-main:#333;--text-sub:#7a7a7a;--text-light:#a3a3a3;--accent-color:#8b8f96;--nav-bg:rgba(255,255,255,0.95);--font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
@@ -555,6 +562,7 @@ body{display:flex;justify-content:center;align-items:center;}
 .send-btn:active{transform:scale(0.9);opacity:0.75;}
 .emoji-panel{position:absolute;left:0;right:0;bottom:100%;background:#fff;border-radius:18px 18px 0 0;box-shadow:0 -6px 24px rgba(0,0,0,0.08);padding:14px 12px;display:none;max-height:250px;overflow-y:auto;z-index:1050;border-top:1px solid #f0f0f0;}
 .emoji-panel.active{display:block;animation:emojiIn 0.22s ease;}
+.emoji-import-hint{font-size:10.5px;color:var(--text-light);line-height:1.5;padding:0 2px 8px;}
 @keyframes emojiIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 .emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;}
 .emoji-item{font-size:24px;text-align:center;cursor:pointer;padding:6px 0;border-radius:8px;user-select:none;display:flex;align-items:center;justify-content:center;height:40px;overflow:hidden;}
@@ -713,6 +721,23 @@ body{display:flex;justify-content:center;align-items:center;}
 .settings-item:last-child{border-bottom:none;}
 .settings-item.clickable{cursor:pointer;}
 .settings-item.clickable:active{opacity:0.6;}
+/* 美化页 */
+.beautify-body{padding:0 15px 30px;}
+.beautify-preview{height:260px;border-radius:22px;background:var(--card-bg) center/cover no-repeat;box-shadow:0 6px 24px rgba(0,0,0,0.08);margin-bottom:18px;display:flex;align-items:center;justify-content:center;color:var(--text-light);font-size:13px;overflow:hidden;border:1px solid rgba(0,0,0,0.04);}
+.beautify-preview.has-image{color:transparent;}
+.beautify-tip{font-size:12px;color:var(--text-light);line-height:1.6;padding:0 4px;}
+/* 聊天设置 - 竖排项 */
+.cs-item-column{flex-direction:column;align-items:stretch;gap:8px;}
+.cs-item-column label{font-size:14px;}
+.cs-item-column input,.cs-item-column textarea{width:100%;text-align:left;padding:10px 12px;border-radius:12px;border:1px solid #eee;background:#f9f9f9;font-size:13px;outline:none;box-sizing:border-box;font-family:var(--font-family);}
+.cs-item-column textarea{resize:vertical;min-height:88px;line-height:1.5;}
+.cs-range{display:flex;align-items:center;gap:8px;}
+.cs-range input{width:72px;}
+.cs-range span{color:var(--text-light);font-size:13px;}
+.cs-hint{font-size:11px;color:var(--text-light);line-height:1.6;padding:2px 18px 14px;}
+.cs-toggle-row{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;gap:12px;}
+.cs-toggle-row label{font-size:14px;color:#333;flex:1;}
+.cs-save-tip{font-size:11px;color:var(--text-light);text-align:center;margin-top:12px;line-height:1.6;}
 .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);color:#fff;padding:12px 24px;border-radius:20px;font-size:14px;z-index:9999;display:none;}
 /* 打字提示 */
 .typing-indicator{display:none;align-items:center;gap:8px;align-self:flex-start;margin-left:0;margin-top:-6px;padding:5px 14px 5px 5px;background:rgba(255,255,255,0.94);border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,0.08);animation:fadeIn 0.3s ease;}
@@ -737,7 +762,7 @@ body{display:flex;justify-content:center;align-items:center;}
 <input type="file" id="moment-image-upload" accept="image/*" style="display:none;">
 <input type="file" id="chat-bg-upload" accept="image/*" style="display:none;">
 <input type="file" id="home-bg-upload" accept="image/*" style="display:none;">
-<input type="file" id="emoji-import-file" accept=".txt,image/*" multiple style="display:none;">
+<input type="file" id="emoji-import-file" accept="image/*,.txt" multiple style="display:none;">
 <input type="file" id="import-card-file" accept=".txt,.json" style="display:none;">
 <input type="file" id="import-status-file" accept=".txt,.json" style="display:none;">
 <input type="file" id="import-ta-file" accept=".txt,.json" style="display:none;">
@@ -848,7 +873,7 @@ body{display:flex;justify-content:center;align-items:center;}
 <h2>表情包</h2>
 </div>
 <div class="btn-group">
-<button class="btn btn-primary" onclick="triggerEmojiImport(emojiManageTab)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>导入图片</button>
+<button class="btn btn-primary" onclick="triggerEmojiImport(emojiManageTab)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>从文件导入</button>
 </div>
 </div>
 <div class="emoji-manage-tabs">
@@ -975,11 +1000,66 @@ body{display:flex;justify-content:center;align-items:center;}
         <label>对方回复最慢（秒）</label>
         <input type="number" id="reply-max-input" placeholder="1.5" step="0.1" min="0.1" inputmode="decimal">
       </div>
-      <div class="cs-item">
-        <label>主动发消息间隔（分钟，0为不主动）</label>
-        <input type="number" id="proactive-min-input" placeholder="3" step="1" min="0" inputmode="numeric">
-      </div>
     </div>
+
+    <div class="cs-group">
+      <div class="cs-item">
+        <label>主动发消息间隔（分钟）</label>
+        <div class="cs-range"><input type="number" id="proactive-min-input" placeholder="3" step="1" min="0" inputmode="numeric"><span>~</span><input type="number" id="proactive-max-input" placeholder="8" step="1" min="0" inputmode="numeric"></div>
+      </div>
+      <div class="cs-item">
+        <label>主动发信件间隔（分钟）</label>
+        <div class="cs-range"><input type="number" id="letter-min-input" placeholder="60" step="1" min="0" inputmode="numeric"><span>~</span><input type="number" id="letter-max-input" placeholder="180" step="1" min="0" inputmode="numeric"></div>
+      </div>
+      <div class="cs-item">
+        <label>主动发动态间隔（分钟）</label>
+        <div class="cs-range"><input type="number" id="moment-min-input" placeholder="30" step="1" min="0" inputmode="numeric"><span>~</span><input type="number" id="moment-max-input" placeholder="120" step="1" min="0" inputmode="numeric"></div>
+      </div>
+      <div class="cs-hint">以上为「最快 ~ 最慢」随机区间，填写 0 表示关闭该项主动行为。</div>
+    </div>
+
+    <div class="cs-group">
+      <div class="cs-item">
+        <label>单次连发 · 发消息</label>
+        <div class="cs-range"><input type="number" id="msg-count-min-input" placeholder="1" step="1" min="1" inputmode="numeric"><span>~</span><input type="number" id="msg-count-max-input" placeholder="3" step="1" min="1" inputmode="numeric"></div>
+      </div>
+      <div class="cs-item">
+        <label>单次连发 · 主动发消息</label>
+        <div class="cs-range"><input type="number" id="proactive-count-min-input" placeholder="1" step="1" min="1" inputmode="numeric"><span>~</span><input type="number" id="proactive-count-max-input" placeholder="2" step="1" min="1" inputmode="numeric"></div>
+      </div>
+      <div class="cs-item">
+        <label>单次连发 · 拼字卡</label>
+        <div class="cs-range"><input type="number" id="pinzi-count-min-input" placeholder="1" step="1" min="1" inputmode="numeric"><span>~</span><input type="number" id="pinzi-count-max-input" placeholder="3" step="1" min="1" inputmode="numeric"></div>
+      </div>
+      <div class="cs-hint">指 TA 一次回复连续发出的消息条数，会在该区间内随机。</div>
+    </div>
+
+    <div class="cs-group">
+      <div class="cs-toggle-row">
+        <label>已读不回</label>
+        <div class="toggle" id="read-no-reply-toggle" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="cs-hint">开启后，TA 只把你的消息标记为已读，不再回复。</div>
+    </div>
+
+    <div class="cs-group">
+      <div class="cs-item cs-item-column">
+        <label>全局字体链接</label>
+        <input type="text" id="font-name-input" placeholder="字体名称，如 MyFont">
+        <input type="url" id="font-url-input" placeholder="字体文件或 CSS 链接，如 https://.../font.css">
+      </div>
+      <div class="cs-hint">支持字体文件直链（.ttf/.otf/.woff/.woff2）或包含 @font-face 的 CSS 链接，留空恢复默认字体。</div>
+    </div>
+
+    <div class="cs-group">
+      <div class="cs-item cs-item-column">
+        <label>气泡自定义 CSS</label>
+        <textarea id="bubble-css-input" rows="5" placeholder=".message-row.left .bubble{background:#fff0f5;border-radius:20px;}
+.message-row.right .bubble{background:#ffe4ec;}"></textarea>
+      </div>
+      <div class="cs-hint">直接写 CSS 即可覆盖聊天气泡样式。</div>
+    </div>
+
     <div class="cs-group">
       <div class="cs-item cs-item-clickable" onclick="openChatBgModal()">
         <label>聊天背景</label>
@@ -987,6 +1067,7 @@ body{display:flex;justify-content:center;align-items:center;}
       </div>
     </div>
     <button class="cs-save-btn" onclick="saveChatSettingsPage()">保存设置</button>
+    <div class="cs-save-tip">保存后立即生效。</div>
   </div>
 </div>
 
@@ -1152,16 +1233,25 @@ body{display:flex;justify-content:center;align-items:center;}
 <h2>设置</h2>
 <div class="settings-group">
 <div class="settings-item"><span>消息通知</span><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
-<div class="settings-item"><span>深色模式</span><div class="toggle" onclick="this.classList.toggle('on')"></div></div>
+<div class="settings-item"><span>后台保活</span><div class="toggle" id="keep-alive-toggle" onclick="toggleKeepAlive(this)"></div></div>
 </div>
+</div>
+
+<!-- 美化 -->
+<div id="page-beautify" class="page">
+<div class="cards-header" style="position:sticky;top:0;background:var(--bg-color);z-index:10;padding-top:6px;">
+<div style="display:flex;align-items:center;gap:12px;">
+<svg viewBox="0 0 24 24" width="22" height="22" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" onclick="switchPage('home')" style="cursor:pointer;flex-shrink:0;"><polyline points="15 18 9 12 15 6"></polyline></svg>
+<h2>美化</h2>
+</div>
+</div>
+<div class="beautify-body">
+<div class="beautify-preview" id="beautify-wallpaper-preview"></div>
 <div class="settings-group">
 <div class="settings-item clickable" onclick="triggerHomeBgUpload()"><span>更换手机壁纸</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
 <div class="settings-item clickable" onclick="resetHomeBg()"><span>恢复默认壁纸</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
 </div>
-<div class="settings-group">
-<div class="settings-item"><span>账号与安全</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
-<div class="settings-item"><span>隐私设置</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
-<div class="settings-item"><span>关于我们</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></div>
+<div class="beautify-tip">从文件导入图片作为手机壁纸，建议使用竖屏比例（如 1080 × 1920）</div>
 </div>
 </div>
 
@@ -1183,6 +1273,7 @@ body{display:flex;justify-content:center;align-items:center;}
 <div class="plus-panel-item" onclick="openSurveyModal('survey')"><div class="pp-icon"><svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="3"></rect><path d="M8.6 10.2l1.9 1.9 4-4.2"></path><path d="M8.6 16.4h6.8"></path></svg></div><span>问卷</span></div>
 <div class="plus-panel-item" onclick="openSurveyModal('choice')"><div class="pp-icon"><svg viewBox="0 0 24 24"><path d="M12 21v-8"></path><path d="M12 13L6.2 6.6"></path><path d="M12 13l5.8-6.4"></path><circle cx="5.6" cy="5.4" r="2.1"></circle><circle cx="18.4" cy="5.4" r="2.1"></circle></svg></div><span>抉择</span></div>
 <div class="plus-panel-item" onclick="openDoodle()"><div class="pp-icon"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path><path d="M2 2l7.586 7.586"></path><circle cx="11" cy="11" r="2"></circle></svg></div><span>涂鸦</span></div>
+<div class="plus-panel-item" onclick="sendPinziCards()"><div class="pp-icon"><svg viewBox="0 0 24 24"><path d="M4 7V5h16v2"></path><path d="M12 5v15"></path><path d="M9 20h6"></path></svg></div><span>拼字卡</span></div>
 <div class="plus-panel-item" onclick="openEmojiModule()"><div class="pp-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg></div><span>表情包</span></div>
 </div>
 </div>
@@ -1191,8 +1282,9 @@ body{display:flex;justify-content:center;align-items:center;}
 <div class="emoji-panel" id="emoji-panel">
 <div class="emoji-tabs">
 <div class="emoji-tab active" id="emoji-tab-me" onclick="switchEmojiTab('me')">我的表情</div>
-<button class="btn" onclick="triggerEmojiImport('me')" style="font-size:11px;padding:4px 10px;margin-left:auto;">导入图片</button>
+<button class="btn" onclick="triggerEmojiImport('me')" style="font-size:11px;padding:4px 10px;margin-left:auto;">从文件导入</button>
 </div>
+<div class="emoji-import-hint">点「从文件导入」可从手机文件中选取图片（支持多选），或导入表情文本包</div>
 <div class="emoji-grid" id="emoji-grid"></div>
 </div>
 
@@ -1388,7 +1480,8 @@ const defaultApps=[
 {id:'music',name:'一起听歌',icon:'music',pageId:'music',visible:true},
 {id:'moments',name:'朋友圈',icon:'moments',pageId:'moments',visible:true},
 {id:'anniversary',name:'纪念日',icon:'anniversary',pageId:'anniversary',visible:true},
-{id:'letter',name:'信件',icon:'letter',pageId:'letter',visible:true}
+{id:'letter',name:'信件',icon:'letter',pageId:'letter',visible:true},
+{id:'beautify',name:'美化',icon:'beautify',pageId:'beautify',visible:true}
 ];
 
 const iconSvgs={
@@ -1402,7 +1495,8 @@ bank:'<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><r
 music:'<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>',
 moments:'<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>',
 anniversary:'<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>',
-letter:'<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>'
+letter:'<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>',
+beautify:'<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 4.6L18.5 9.5l-4.6 1.9L12 16l-1.9-4.6L5.5 9.5l4.6-1.9z"></path><path d="M18.5 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"></path></svg>'
 };
 
 let isEditingApps=false;
@@ -1434,8 +1528,17 @@ let emojiManageTab='me';
 let replyMinSec=0.8;
 let replyMaxSec=1.5;
 let proactiveMinMinute=0;
+let proactiveMaxMinute=0;
 let proactiveTimer=null;
 let lastActivityTime=Date.now();
+let letterMinMinute=0,letterMaxMinute=0;
+let momentMinMinute=0,momentMaxMinute=0;
+let letterTimer=null,momentTimer=null;
+let nextLetterAt=0,nextMomentAt=0;
+let msgCountMin=1,msgCountMax=3;
+let proactiveCountMin=1,proactiveCountMax=2;
+let pinziCountMin=1,pinziCountMax=3;
+let readNoReply=false;
 
 // 涂鸦
 let doodleCanvas=null,doodleCtx=null,doodleDrawing=false,doodleColor='#333333',doodleLast=null;
@@ -1581,6 +1684,10 @@ function initData(){
       appConfigs.splice(1,0,{id:'companion',name:'陪伴',icon:'companion',pageId:'companion',visible:true});
       appsMigrated=true;
     }
+    if(!appConfigs.some(a=>a.id==='beautify')){
+      appConfigs.push({id:'beautify',name:'美化',icon:'beautify',pageId:'beautify',visible:true});
+      appsMigrated=true;
+    }
     if(appsMigrated) saveAppConfigs();
     renderApps();
     const savedGroups=localStorage.getItem('app_groups');
@@ -1639,7 +1746,11 @@ function initData(){
     initVoiceButton();
     loadReplySpeed();
     loadProactiveSetting();
+    applyAllCustomizations();
+    applyKeepAlive();
     startProactiveTimer();
+    startLetterTimer();
+    startMomentTimer();
     renderHomeChatPreview();
     updateModuleEntryDesc();
     renderCompanion();
@@ -1864,7 +1975,7 @@ function resetChatBg(){localStorage.removeItem('chat_bg_image');applyChatBg();re
 function triggerHomeBgUpload(){document.getElementById('home-bg-upload').click();}
 document.getElementById('home-bg-upload').addEventListener('change',async function(e){
   const file=e.target.files[0];if(!file) return;
-  try{const b=await compressImage(file,1200,0.8);try{localStorage.setItem('home_bg_image',b);}catch(err){showToast('图片过大');}applyHomeBg();showToast('壁纸已更新');}catch(err){showToast('图片读取失败');}
+  try{const b=await compressImage(file,1200,0.8);try{localStorage.setItem('home_bg_image',b);}catch(err){showToast('图片过大');}applyHomeBg();renderBeautifyPage();showToast('壁纸已更新');}catch(err){showToast('图片读取失败');}
   e.target.value='';
 });
 function applyHomeBg(){
@@ -1874,7 +1985,14 @@ function applyHomeBg(){
   if(bg){pageHome.style.backgroundImage=`url('${bg}')`;pageHome.style.backgroundSize='cover';pageHome.style.backgroundPosition='center';pageHome.style.backgroundRepeat='no-repeat';}
   else pageHome.style.backgroundImage='';
 }
-function resetHomeBg(){localStorage.removeItem('home_bg_image');applyHomeBg();showToast('已恢复默认壁纸');}
+function renderBeautifyPage(){
+  const box=document.getElementById('beautify-wallpaper-preview');
+  if(!box) return;
+  const bg=localStorage.getItem('home_bg_image');
+  if(bg){box.style.backgroundImage=`url('${bg}')`;box.classList.add('has-image');box.innerText='';}
+  else{box.style.backgroundImage='';box.classList.remove('has-image');box.innerText='当前为默认壁纸';}
+}
+function resetHomeBg(){localStorage.removeItem('home_bg_image');applyHomeBg();renderBeautifyPage();showToast('已恢复默认壁纸');}
 
 let currentAvatarTarget='ta';
 function triggerAvatarUpload(target){currentAvatarTarget=target;document.getElementById('avatar-upload').click();}
@@ -2666,7 +2784,7 @@ function switchPage(pageId,navElement){
   if(targetPage) targetPage.classList.add('active');
   const bottomNav=document.querySelector('.bottom-nav');
   if(bottomNav){
-    if(['chat','music','moments','anniversary','letter','cards-detail','emoji-manager','companion','shop','bank','chat-settings'].includes(pageId)) bottomNav.style.display='none';
+    if(['chat','music','moments','anniversary','letter','cards-detail','emoji-manager','companion','shop','bank','chat-settings','beautify'].includes(pageId)) bottomNav.style.display='none';
     else bottomNav.style.display='flex';
   }
   if(navElement){
@@ -2693,6 +2811,7 @@ function switchPage(pageId,navElement){
   if(pageId==='letter') renderLetters();
   if(pageId==='chat'){applyChatBg();renderStatusText();renderMessages();}
   if(pageId==='home'){applyHomeBg();renderHomeChatPreview();updateBeijingTime();}
+  if(pageId==='beautify') renderBeautifyPage();
   if(pageId==='companion') renderCompanion();
   if(pageId==='bank') renderBank();
   if(pageId==='shop') renderShop();
@@ -3267,6 +3386,96 @@ function getReplyDelay(){
 function loadProactiveSetting(){
   const savedMin=parseFloat(localStorage.getItem('proactive_min_minute'));
   if(!isNaN(savedMin)&&savedMin>=0) proactiveMinMinute=savedMin;
+  const savedMax=parseFloat(localStorage.getItem('proactive_max_minute'));
+  if(!isNaN(savedMax)&&savedMax>=0) proactiveMaxMinute=savedMax;
+  if(proactiveMaxMinute<proactiveMinMinute) proactiveMaxMinute=proactiveMinMinute;
+  const lm=parseFloat(localStorage.getItem('letter_min_minute'));if(!isNaN(lm)&&lm>=0) letterMinMinute=lm;
+  const lx=parseFloat(localStorage.getItem('letter_max_minute'));if(!isNaN(lx)&&lx>=0) letterMaxMinute=lx;
+  if(letterMaxMinute<letterMinMinute) letterMaxMinute=letterMinMinute;
+  const mm=parseFloat(localStorage.getItem('moment_min_minute'));if(!isNaN(mm)&&mm>=0) momentMinMinute=mm;
+  const mx=parseFloat(localStorage.getItem('moment_max_minute'));if(!isNaN(mx)&&mx>=0) momentMaxMinute=mx;
+  if(momentMaxMinute<momentMinMinute) momentMaxMinute=momentMinMinute;
+  const readCount=(key,def)=>{const v=parseFloat(localStorage.getItem(key));return (!isNaN(v)&&v>=1)?v:def;};
+  msgCountMin=readCount('msg_count_min',1);msgCountMax=readCount('msg_count_max',3);
+  proactiveCountMin=readCount('proactive_count_min',1);proactiveCountMax=readCount('proactive_count_max',2);
+  pinziCountMin=readCount('pinzi_count_min',1);pinziCountMax=readCount('pinzi_count_max',3);
+  if(msgCountMax<msgCountMin) msgCountMax=msgCountMin;
+  if(proactiveCountMax<proactiveCountMin) proactiveCountMax=proactiveCountMin;
+  if(pinziCountMax<pinziCountMin) pinziCountMax=pinziCountMin;
+  readNoReply=localStorage.getItem('read_no_reply')==='1';
+}
+// 在 [min,max] 区间内随机取整数
+function rangeRandom(min,max){min=Math.floor(min);max=Math.floor(max);if(max<min)max=min;return min+Math.floor(Math.random()*(max-min+1));}
+// 全局字体
+function applyGlobalFont(){
+  const name=(localStorage.getItem('custom_font_name')||'').trim();
+  const url=(localStorage.getItem('custom_font_url')||'').trim();
+  const linkEl=document.getElementById('custom-font-link');
+  const styleEl=document.getElementById('custom-font-style');
+  if(linkEl) linkEl.remove();
+  if(styleEl) styleEl.remove();
+  if(!url){document.documentElement.style.removeProperty('--font-family');return;}
+  if(/\.css(\?|#|$)/i.test(url)){
+    const link=document.createElement('link');
+    link.id='custom-font-link';link.rel='stylesheet';link.href=url;
+    document.head.appendChild(link);
+  }else if(name){
+    const style=document.createElement('style');
+    style.id='custom-font-style';
+    style.textContent=`@font-face{font-family:'${name}';src:url('${url}');font-display:swap;}`;
+    document.head.appendChild(style);
+  }
+  if(name) document.documentElement.style.setProperty('--font-family',`'${name}',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif`);
+  else document.documentElement.style.removeProperty('--font-family');
+}
+// 气泡自定义 CSS
+function applyBubbleCss(){
+  const css=localStorage.getItem('custom_bubble_css')||'';
+  let style=document.getElementById('custom-bubble-style');
+  if(!style){style=document.createElement('style');style.id='custom-bubble-style';document.head.appendChild(style);}
+  style.textContent=css;
+}
+function applyAllCustomizations(){applyGlobalFont();applyBubbleCss();}
+// ================= 后台保活 =================
+let keepAliveTimer=null,wakeLock=null;
+function toggleKeepAlive(el){
+  const on=!el.classList.contains('on');
+  el.classList.toggle('on',on);
+  localStorage.setItem('keep_alive',on?'1':'0');
+  applyKeepAlive();
+  showToast(on?'已开启后台保活':'已关闭后台保活');
+}
+function applyKeepAlive(){
+  const on=localStorage.getItem('keep_alive')==='1';
+  const el=document.getElementById('keep-alive-toggle');
+  if(el) el.classList.toggle('on',on);
+  if(keepAliveTimer){clearInterval(keepAliveTimer);keepAliveTimer=null;}
+  if(on){
+    keepAliveTimer=setInterval(()=>{
+      try{localStorage.setItem('keep_alive_ping',String(Date.now()));}catch(e){}
+      if(document.visibilityState==='visible'&&!wakeLock) requestWakeLock();
+    },20000);
+    requestWakeLock();
+    document.addEventListener('visibilitychange',onVisibilityWake);
+  }else{
+    document.removeEventListener('visibilitychange',onVisibilityWake);
+    releaseWakeLock();
+  }
+}
+function requestWakeLock(){
+  if(!('wakeLock' in navigator)) return;
+  try{
+    navigator.wakeLock.request('screen').then(l=>{
+      wakeLock=l;
+      l.addEventListener('release',()=>{wakeLock=null;});
+    }).catch(()=>{});
+  }catch(e){}
+}
+function releaseWakeLock(){
+  if(wakeLock){try{wakeLock.release();}catch(e){}wakeLock=null;}
+}
+function onVisibilityWake(){
+  if(document.visibilityState==='visible'&&localStorage.getItem('keep_alive')==='1') requestWakeLock();
 }
 function toggleChatMenu(e){
   if(e) e.stopPropagation();
@@ -3290,12 +3499,39 @@ function clearChat(){
 
 // 聊天设置独立页面
 function openChatSettingsPage(){
-  document.getElementById('reply-min-input').value=replyMinSec;
-  document.getElementById('reply-max-input').value=replyMaxSec;
-  document.getElementById('proactive-min-input').value=proactiveMinMinute;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el) el.value=v;};
+  set('reply-min-input',replyMinSec);
+  set('reply-max-input',replyMaxSec);
+  set('proactive-min-input',proactiveMinMinute);
+  set('proactive-max-input',proactiveMaxMinute);
+  set('letter-min-input',letterMinMinute);
+  set('letter-max-input',letterMaxMinute);
+  set('moment-min-input',momentMinMinute);
+  set('moment-max-input',momentMaxMinute);
+  set('msg-count-min-input',msgCountMin);
+  set('msg-count-max-input',msgCountMax);
+  set('proactive-count-min-input',proactiveCountMin);
+  set('proactive-count-max-input',proactiveCountMax);
+  set('pinzi-count-min-input',pinziCountMin);
+  set('pinzi-count-max-input',pinziCountMax);
+  set('font-name-input',localStorage.getItem('custom_font_name')||'');
+  set('font-url-input',localStorage.getItem('custom_font_url')||'');
+  set('bubble-css-input',localStorage.getItem('custom_bubble_css')||'');
+  const t=document.getElementById('read-no-reply-toggle');
+  if(t) t.classList.toggle('on',readNoReply);
   switchPage('chat-settings');
 }
 function saveChatSettingsPage(){
+  const readMinute=(id)=>{
+    const v=parseFloat(document.getElementById(id).value);
+    if(isNaN(v)||v<0) return 0;
+    return Math.min(10080,Math.round(v));
+  };
+  const readCount=(id,def)=>{
+    const v=parseFloat(document.getElementById(id).value);
+    if(isNaN(v)||v<1) return def;
+    return Math.min(99,Math.round(v));
+  };
   let min=parseFloat(document.getElementById('reply-min-input').value);
   let max=parseFloat(document.getElementById('reply-max-input').value);
   if(isNaN(min)||min<=0) min=0.1;
@@ -3306,13 +3542,107 @@ function saveChatSettingsPage(){
   replyMinSec=Math.round(min*10)/10;replyMaxSec=Math.round(max*10)/10;
   localStorage.setItem('reply_min_sec',replyMinSec);
   localStorage.setItem('reply_max_sec',replyMaxSec);
-  let proactiveMin=parseFloat(document.getElementById('proactive-min-input').value);
-  if(isNaN(proactiveMin)||proactiveMin<0) proactiveMin=0;
-  if(proactiveMin>1440) proactiveMin=1440;
-  proactiveMinMinute=Math.round(proactiveMin);
+
+  proactiveMinMinute=readMinute('proactive-min-input');
+  proactiveMaxMinute=readMinute('proactive-max-input');
+  if(proactiveMaxMinute<proactiveMinMinute) proactiveMaxMinute=proactiveMinMinute;
   localStorage.setItem('proactive_min_minute',proactiveMinMinute);
-  if(proactiveMinMinute>0){startProactiveTimer();showToast(`已保存：对方将在 ${proactiveMinMinute} 分钟后主动发消息`);}
-  else showToast('已保存：对方不会主动发消息');
+  localStorage.setItem('proactive_max_minute',proactiveMaxMinute);
+
+  letterMinMinute=readMinute('letter-min-input');
+  letterMaxMinute=readMinute('letter-max-input');
+  if(letterMaxMinute<letterMinMinute) letterMaxMinute=letterMinMinute;
+  localStorage.setItem('letter_min_minute',letterMinMinute);
+  localStorage.setItem('letter_max_minute',letterMaxMinute);
+
+  momentMinMinute=readMinute('moment-min-input');
+  momentMaxMinute=readMinute('moment-max-input');
+  if(momentMaxMinute<momentMinMinute) momentMaxMinute=momentMinMinute;
+  localStorage.setItem('moment_min_minute',momentMinMinute);
+  localStorage.setItem('moment_max_minute',momentMaxMinute);
+
+  msgCountMin=readCount('msg-count-min-input',1);msgCountMax=readCount('msg-count-max-input',3);
+  if(msgCountMax<msgCountMin) msgCountMax=msgCountMin;
+  proactiveCountMin=readCount('proactive-count-min-input',1);proactiveCountMax=readCount('proactive-count-max-input',2);
+  if(proactiveCountMax<proactiveCountMin) proactiveCountMax=proactiveCountMin;
+  pinziCountMin=readCount('pinzi-count-min-input',1);pinziCountMax=readCount('pinzi-count-max-input',3);
+  if(pinziCountMax<pinziCountMin) pinziCountMax=pinziCountMin;
+  localStorage.setItem('msg_count_min',msgCountMin);localStorage.setItem('msg_count_max',msgCountMax);
+  localStorage.setItem('proactive_count_min',proactiveCountMin);localStorage.setItem('proactive_count_max',proactiveCountMax);
+  localStorage.setItem('pinzi_count_min',pinziCountMin);localStorage.setItem('pinzi_count_max',pinziCountMax);
+
+  const rt=document.getElementById('read-no-reply-toggle');
+  readNoReply=!!(rt&&rt.classList.contains('on'));
+  localStorage.setItem('read_no_reply',readNoReply?'1':'0');
+
+  const fontName=document.getElementById('font-name-input').value.trim();
+  const fontUrl=document.getElementById('font-url-input').value.trim();
+  const bubbleCss=document.getElementById('bubble-css-input').value;
+  localStorage.setItem('custom_font_name',fontName);
+  localStorage.setItem('custom_font_url',fontUrl);
+  localStorage.setItem('custom_bubble_css',bubbleCss);
+  applyGlobalFont();applyBubbleCss();
+
+  restartTimers();
+  showToast('已保存设置');
+}
+
+// ================= 主动信件 / 主动动态 =================
+function startLetterTimer(){
+  if(letterTimer) clearInterval(letterTimer);
+  letterTimer=null;nextLetterAt=0;
+  if(letterMinMinute<=0) return;
+  nextLetterAt=Date.now()+rangeRandom(letterMinMinute,letterMaxMinute)*60*1000;
+  letterTimer=setInterval(()=>{
+    if(letterMinMinute<=0){clearInterval(letterTimer);letterTimer=null;return;}
+    if(Date.now()>=nextLetterAt){
+      nextLetterAt=Date.now()+rangeRandom(letterMinMinute,Math.max(letterMinMinute,letterMaxMinute))*60*1000;
+      sendTaLetter();
+    }
+  },20000);
+}
+function startMomentTimer(){
+  if(momentTimer) clearInterval(momentTimer);
+  momentTimer=null;nextMomentAt=0;
+  if(momentMinMinute<=0) return;
+  nextMomentAt=Date.now()+rangeRandom(momentMinMinute,momentMaxMinute)*60*1000;
+  momentTimer=setInterval(()=>{
+    if(momentMinMinute<=0){clearInterval(momentTimer);momentTimer=null;return;}
+    if(Date.now()>=nextMomentAt){
+      nextMomentAt=Date.now()+rangeRandom(momentMinMinute,Math.max(momentMinMinute,momentMaxMinute))*60*1000;
+      sendTaMoment();
+    }
+  },20000);
+}
+function restartTimers(){startProactiveTimer();startLetterTimer();startMomentTimer();}
+function sendTaLetter(){
+  const taName=nameTa||'TA';
+  const titles=['今天也想和你说说话','写给${name}的一封信','突然很想你','碎碎念','晚安，好梦'];
+  const bodies=[
+    '刚刚看到窗外的云，忽然就想起你了。想告诉你，今天也要好好吃饭、好好睡觉。',
+    '有些话在聊天框里打了很多遍又删掉了，还是写下来比较安心。你最近还好吗？',
+    '今天有点想你，没什么特别的理由。就是那种，看见什么都会想到你的想你。',
+    '如果你今天很累的话，就把这封信当成一个拥抱吧。',
+    '我把今天的心情都折进这封信里了，希望它到你手里的时候，还带着一点温度。'
+  ];
+  const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+  const now=new Date();
+  const dateStr=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  letters.unshift({title:pick(titles).replace('${name}',taName),content:pick(bodies),date:dateStr,from:'ta'});
+  localStorage.setItem('app_letters',JSON.stringify(letters));
+  if(document.getElementById('page-letter')&&document.getElementById('page-letter').classList.contains('active')) renderLetters();
+  showToast(`${taName} 给你写了一封信`);
+}
+function sendTaMoment(){
+  const texts=['今天心情不错，分享给你','刚刚路过那家店，想起你说过喜欢','今天也有好好生活哦','有点想你','拍下来留个纪念','今天天气很好，可惜你不在身边'];
+  const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+  const now=new Date();
+  const timeStr=`${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  momentsData.unshift({id:'m'+Date.now()+'_ta',author:'ta',text:pick(texts),image:'',time:timeStr,likes:[],comments:[]});
+  saveMomentsData();
+  const momentsPage=document.getElementById('page-moments');
+  if(momentsPage&&momentsPage.classList.contains('active')) renderMomentsFeed();
+  showToast(`${nameTa||'TA'} 发布了新动态`);
 }
 
 // ================= 主动消息 =================
@@ -3324,7 +3654,13 @@ function startProactiveTimer(){
     if(!pageChat||!pageChat.classList.contains('active')) return;
     if(proactiveMinMinute<=0) return;
     const inactiveTime=(Date.now()-lastActivityTime)/1000/60;
-    if(inactiveTime>=proactiveMinMinute){lastActivityTime=Date.now();sendProactiveMessage();}
+    const target=rangeRandom(proactiveMinMinute,Math.max(proactiveMinMinute,proactiveMaxMinute));
+    if(inactiveTime>=target){
+      lastActivityTime=Date.now();
+      sendProactiveMessage();
+      const extra=rangeRandom(proactiveCountMin,Math.max(proactiveCountMin,proactiveCountMax))-1;
+      for(let i=1;i<=extra;i++){setTimeout(()=>{sendOneTaMessage();},i*(900+Math.random()*1600));}
+    }
   },10000);
 }
 function sendProactiveMessage(){
@@ -3725,6 +4061,85 @@ function generateRandomDoodle(){
   }
   return c.toDataURL('image/png');
 }
+// TA 连发一条消息（用于单次连发条数）
+function sendOneTaMessage(){
+  const taImgPool=(emojiData.ta||[]).filter(e=>isImageStr(e));
+  const pool=(taEmojis||[]).filter(e=>e&&e.content&&!e.locked&&!isImageStr(e.content));
+  const wordPool=(wordCards||[]).filter(c=>!c.locked);
+  const kaomojiPool=(kaomojiList||[]).filter(c=>!c.locked);
+  const r=Math.random();
+  let msg={id:createMessageId(),side:'left',text:'',quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()};
+  if(taImgPool.length>0&&r<0.2){
+    msg.type='image';msg.url=taImgPool[Math.floor(Math.random()*taImgPool.length)];msg.text='[图片]';
+  }else if(pool.length>0&&r<0.45){
+    msg.text=pool[Math.floor(Math.random()*pool.length)].content;
+  }else{
+    const merged=wordPool.concat(kaomojiPool);
+    const fallback=['嗯嗯','然后呢','继续说','好呀','知道了','哈哈','在听'];
+    msg.text=merged.length>0?merged[Math.floor(Math.random()*merged.length)].content:fallback[Math.floor(Math.random()*fallback.length)];
+  }
+  messages.push(msg);renderMessages();saveMessages();renderHomeChatPreview();
+}
+// TA 一次回复，连发 count 条（count 来自「单次连发 · 发消息」区间）
+function sendTaReplyBatch(count){
+  if(Math.random()<0.10){
+    const doodleUrl=generateRandomDoodle();
+    messages.push({id:createMessageId(),side:'left',type:'image',url:doodleUrl,text:'[涂鸦]',quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
+    renderMessages();
+  }else{
+    const taImgPool=(emojiData.ta||[]).filter(e=>isImageStr(e));
+    const pool=(taEmojis||[]).filter(e=>e&&e.content&&!e.locked&&!isImageStr(e.content));
+    if(taImgPool.length>0&&Math.random()<0.2){
+      const url=taImgPool[Math.floor(Math.random()*taImgPool.length)];
+      messages.push({id:createMessageId(),side:'left',type:'image',url,text:'[图片]',quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
+      renderMessages();
+    }else if(pool.length>0&&Math.random()<0.25){
+      const emoji=pool[Math.floor(Math.random()*pool.length)];
+      messages.push({id:createMessageId(),side:'left',text:emoji.content,quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
+      renderMessages();
+    }else{
+      const replyText=getRandomReply();
+      if(replyText){
+        const replyMsg={id:createMessageId(),side:'left',text:replyText,quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()};
+        messages.push(replyMsg);renderMessages();
+        if(Math.random()<0.3){
+          const delay=1000+Math.random()*2000;
+          setTimeout(()=>{
+            const target=messages.find(m=>m.id===replyMsg.id);
+            if(target&&!target.revoked){target.revoked=true;target.revokedText=target.text;target.revokedSide=target.side;renderMessages();}
+          },delay);
+        }
+        if(Math.random()<0.18) setTimeout(()=>{sendTaMoneyMessage();},1500+Math.random()*2500);
+        if(Math.random()<0.12) setTimeout(()=>{sendTaCallMessage();},2500+Math.random()*3000);
+      }else{
+        messages.push({id:createMessageId(),side:'left',text:'(暂无可用字卡/颜文字，请去添加或解锁)',quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
+        renderMessages();
+      }
+    }
+  }
+  for(let i=1;i<count;i++){setTimeout(()=>sendOneTaMessage(),i*(900+Math.random()*1500));}
+  saveMessages();renderHomeChatPreview();
+}
+// 拼字卡：从字卡库随机抽取「单次连发 · 拼字卡」区间内的若干条，连续发出
+function sendPinziCards(){
+  closePlusMenu();
+  const pool=(wordCards||[]).filter(c=>!c.locked&&c.content);
+  if(pool.length===0){showToast('字卡库为空，先去添加字卡吧');return;}
+  const want=rangeRandom(pinziCountMin,Math.max(pinziCountMin,pinziCountMax));
+  const count=Math.min(want,pool.length);
+  const picked=[];
+  for(let i=0;i<count;i++){picked.push(pool[Math.floor(Math.random()*pool.length)].content);}
+  picked.forEach((text,i)=>{
+    setTimeout(()=>{
+      messages.push({id:createMessageId(),side:'right',text,quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
+      renderMessages();saveMessages();renderHomeChatPreview();lastActivityTime=Date.now();
+    },i*240);
+  });
+  showToast(`拼字卡：连发 ${count} 条`);
+  if(!readNoReply){
+    setTimeout(()=>{sendTaReplyBatch(rangeRandom(msgCountMin,Math.max(msgCountMin,msgCountMax)));},count*240+getReplyDelay());
+  }
+}
 function sendMessage(){
   const input=document.getElementById('message-input');
   const text=input.value.trim();
@@ -3734,43 +4149,8 @@ function sendMessage(){
   showTypingIndicator();
   setTimeout(()=>{
     hideTypingIndicator();
-    if(Math.random()<0.10){
-      const doodleUrl=generateRandomDoodle();
-      messages.push({id:createMessageId(),side:'left',type:'image',url:doodleUrl,text:'[涂鸦]',quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
-      renderMessages();
-      return;
-    }
-    const taImgPool=(emojiData.ta||[]).filter(e=>isImageStr(e));
-    if(taImgPool.length>0&&Math.random()<0.2){
-      const url=taImgPool[Math.floor(Math.random()*taImgPool.length)];
-      messages.push({id:createMessageId(),side:'left',type:'image',url,text:'[图片]',quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
-      renderMessages();
-      return;
-    }
-    const pool=(taEmojis||[]).filter(e=>e&&e.content&&!e.locked&&!isImageStr(e.content));
-    if(pool.length>0&&Math.random()<0.25){
-      const emoji=pool[Math.floor(Math.random()*pool.length)];
-      messages.push({id:createMessageId(),side:'left',text:emoji.content,quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
-      renderMessages();
-      return;
-    }
-    const replyText=getRandomReply();
-    if(replyText){
-      const replyMsg={id:createMessageId(),side:'left',text:replyText,quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()};
-      messages.push(replyMsg);renderMessages();
-      if(Math.random()<0.3){
-        const delay=1000+Math.random()*2000;
-        setTimeout(()=>{
-          const target=messages.find(m=>m.id===replyMsg.id);
-          if(target&&!target.revoked){target.revoked=true;target.revokedText=target.text;target.revokedSide=target.side;renderMessages();}
-        },delay);
-      }
-      if(Math.random()<0.18) setTimeout(()=>{sendTaMoneyMessage();},1500+Math.random()*2500);
-      if(Math.random()<0.12) setTimeout(()=>{sendTaCallMessage();},2500+Math.random()*3000);
-    } else {
-      messages.push({id:createMessageId(),side:'left',text:'(暂无可用字卡/颜文字，请去添加或解锁)',quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
-      renderMessages();
-    }
+    if(readNoReply) return; // 已读不回：TA 只看不回
+    sendTaReplyBatch(rangeRandom(msgCountMin,Math.max(msgCountMin,msgCountMax)));
   },getReplyDelay());
 }
 function sendTaMoneyMessage(){
@@ -4425,6 +4805,12 @@ window.onload=function(){
   renderStatusText();
   updateBeijingTime();
   setInterval(updateBeijingTime,20000);
+  // PWA：注册 Service Worker（离线可用）
+  try{
+    if('serviceWorker' in navigator && location.protocol!=='file:'){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    }
+  }catch(e){}
 };
 </script>
 </body>
