@@ -331,10 +331,10 @@ body{display:flex;justify-content:center;align-items:center;}
 .chat-area{flex:1;min-height:0;overflow-y:auto;padding:16px 12px 10px;display:flex;flex-direction:column;gap:7px;-webkit-overflow-scrolling:touch;position:relative;}
 .chat-area::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.12);pointer-events:none;z-index:0;}
 .chat-area>*{position:relative;z-index:1;}
-.message-row{display:flex;align-items:flex-end;gap:0;max-width:80%;animation:msgPop 0.22s ease;}
+.message-row{display:flex;align-items:flex-end;gap:7px;max-width:82%;animation:msgPop 0.22s ease;}
 .message-row.left{align-self:flex-start;}
 .message-row.right{align-self:flex-end;flex-direction:row-reverse;}
-.message-row .avatar{display:none;} /* iMessage 不在消息旁显示头像 */
+.message-row .avatar{width:34px;height:34px;flex-shrink:0;border-radius:50%;border:none;background-size:cover;background-position:center;box-shadow:0 1px 4px rgba(0,0,0,0.1);cursor:pointer;}
 @keyframes msgPop{from{opacity:0;transform:translateY(6px) scale(0.98);}to{opacity:1;transform:none;}}
 .message-content{display:flex;flex-direction:column;position:relative;}
 .message-row.left .message-content{align-items:flex-start;}
