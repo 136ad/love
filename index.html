@@ -341,10 +341,11 @@ body{display:flex;justify-content:center;align-items:center;}
 .message-row.right .message-content{align-items:flex-end;}
 .timestamp{font-size:11px;color:#8e8e93;margin:0 2px 4px;display:flex;align-items:center;gap:4px;}
 .message-row.right .timestamp{justify-content:flex-end;}
-/* 气泡外的已读/未读文字 */
-.read-status-outside{font-size:10px;color:#8e8e93;margin-top:3px;cursor:pointer;user-select:none;align-self:flex-end;transition:color 0.2s;}
-.read-status-outside.read{color:#8e8e93;}
+/* 气泡外的已读/未读 双✓ */
+.read-status-outside{margin-top:3px;cursor:pointer;user-select:none;align-self:flex-end;display:inline-flex;align-items:center;transition:color 0.2s;line-height:0;}
+.read-status-outside.read{color:#53bdeb;}
 .read-status-outside.unread{color:#c7c7cc;}
+.read-status-outside .double-check{display:block;}
 .bubble{padding:8px 14px;border-radius:18px;font-size:15px;line-height:1.35;position:relative;word-break:break-word;box-shadow:none;cursor:pointer;user-select:none;}
 /* iMessage 蓝色气泡（我） + 灰色气泡（对方） */
 .message-row.left .bubble{background:#e9e9eb;color:#000;border-bottom-left-radius:4px;}
@@ -679,44 +680,44 @@ body{display:flex;justify-content:center;align-items:center;}
 .anniversary-item-days span{font-size:12px;color:#aaa;font-weight:400;margin-left:4px;}
 .anniversary-empty{text-align:center;color:#bbb;font-size:13px;padding:60px 0;}
 #page-moments{background:#fff;}
-.moments-top-bar{display:flex;justify-content:space-between;align-items:center;padding:40px 15px 15px;background:#fff;border-bottom:1px solid #f0f0f0;}
+.moments-top-bar{display:flex;justify-content:space-between;align-items:center;padding:40px 15px 12px;background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);border-bottom:0.5px solid rgba(0,0,0,0.1);position:sticky;top:0;z-index:20;}
 .moments-top-bar .back-btn{cursor:pointer;width:24px;height:24px;display:flex;justify-content:center;align-items:center;}
 .moments-top-bar .title{font-size:16px;font-weight:600;color:#333;}
 .moments-top-bar .icons{display:flex;gap:15px;}
 .moments-top-bar .icons svg{width:20px;height:20px;stroke:#333;fill:none;stroke-width:2;cursor:pointer;}
-.moments-content-area{flex:1;overflow-y:auto;padding-bottom:60px;background:#fff;}
-.moments-view{display:none;padding:0 15px;}
+.moments-content-area{flex:1;overflow-y:auto;padding-bottom:60px;background:#f2f2f7;}
+.moments-view{display:none;padding:12px 12px 0;}
 .moments-view.active{display:block;}
-.profile-card{text-align:center;padding:20px 0;}
+.profile-card{text-align:center;padding:22px 16px;background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);margin-bottom:10px;}
 .profile-card .big-avatar{width:80px;height:80px;border-radius:50%;margin:0 auto 15px;background:#f0f0f0;background-size:cover;background-position:center;cursor:pointer;}
 .profile-stats{display:flex;justify-content:center;gap:40px;margin-bottom:15px;}
 .profile-stats .stat-item{display:flex;flex-direction:column;align-items:center;}
-.profile-stats .stat-item .num{font-size:18px;font-weight:600;color:#333;}
-.profile-stats .stat-item .label{font-size:11px;color:#888;margin-top:2px;}
-.profile-name{font-size:18px;font-weight:600;margin-bottom:5px;cursor:pointer;}
-.profile-bio{font-size:12px;color:#888;margin-bottom:20px;cursor:pointer;}
-.profile-actions{display:flex;justify-content:center;gap:15px;margin-bottom:30px;}
-.profile-actions button{padding:8px 30px;border-radius:20px;border:none;font-size:13px;background:#f0f0f0;color:#333;cursor:pointer;}
-.profile-actions button.primary{background:#333;color:#fff;}
-.profile-watermark{text-align:center;font-family:"Georgia",serif;font-size:40px;color:#e0e0e0;margin-top:40px;letter-spacing:2px;font-weight:700;cursor:pointer;}
-.feed-post{padding:20px 0;border-bottom:1px solid #f5f5f5;display:flex;gap:12px;}
-.feed-avatar{width:40px;height:40px;border-radius:50%;background:#eee;background-size:cover;background-position:center;cursor:pointer;flex-shrink:0;}
-.feed-right{flex:1;display:flex;flex-direction:column;}
-.feed-username{font-size:14px;font-weight:600;color:#5b6a8a;margin-bottom:4px;cursor:pointer;}
-.feed-text{font-size:14px;color:#333;line-height:1.5;margin-bottom:10px;cursor:pointer;white-space:pre-wrap;}
-.feed-image-container{width:100%;max-height:250px;border-radius:8px;overflow:hidden;margin-bottom:10px;cursor:pointer;}
+.profile-stats .stat-item .num{font-size:18px;font-weight:700;color:#111;}
+.profile-stats .stat-item .label{font-size:11px;color:#8e8e93;margin-top:2px;}
+.profile-name{font-size:18px;font-weight:700;color:#111;margin-bottom:5px;cursor:pointer;}
+.profile-bio{font-size:12px;color:#8e8e93;margin-bottom:20px;cursor:pointer;}
+.profile-actions{display:flex;justify-content:center;gap:15px;margin-bottom:10px;}
+.profile-actions button{padding:8px 30px;border-radius:20px;border:none;font-size:13px;background:#f2f2f7;color:#1c1c1e;cursor:pointer;}
+.profile-actions button.primary{background:#0b84fe;color:#fff;}
+.profile-watermark{text-align:center;font-family:"Georgia",serif;font-size:40px;color:#d8d8dc;margin-top:40px;letter-spacing:2px;font-weight:700;cursor:pointer;}
+.feed-post{padding:14px 14px 12px;margin-bottom:10px;border-radius:16px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.06);display:flex;gap:11px;border:none;}
+.feed-avatar{width:38px;height:38px;border-radius:50%;background:#eee;background-size:cover;background-position:center;cursor:pointer;flex-shrink:0;}
+.feed-right{flex:1;display:flex;flex-direction:column;min-width:0;}
+.feed-username{font-size:14px;font-weight:700;color:#111;margin-bottom:3px;cursor:pointer;letter-spacing:0.1px;}
+.feed-text{font-size:14px;color:#1c1c1e;line-height:1.45;margin-bottom:9px;cursor:pointer;white-space:pre-wrap;}
+.feed-image-container{width:100%;max-height:250px;border-radius:12px;overflow:hidden;margin-bottom:9px;cursor:pointer;}
 .feed-image-container img{width:100%;display:block;}
-.feed-actions{display:flex;gap:20px;align-items:center;font-size:12px;color:#aaa;}
-.feed-actions svg{width:18px;height:18px;stroke:#aaa;fill:none;stroke-width:2;cursor:pointer;}
-.feed-actions svg.liked{fill:#ff4d4f;stroke:#ff4d4f;}
-.feed-time{margin-left:auto;font-size:11px;}
-.feed-comments{margin-top:8px;background:#f7f7f8;border-radius:10px;padding:8px 12px;}
-.feed-comment-line{font-size:12.5px;color:#555;line-height:1.7;word-break:break-word;cursor:pointer;}
+.feed-actions{display:flex;gap:22px;align-items:center;font-size:12px;color:#8e8e93;}
+.feed-actions svg{width:19px;height:19px;stroke:#3a3a3c;fill:none;stroke-width:1.7;cursor:pointer;}
+.feed-actions svg.liked{fill:#ff3b30;stroke:#ff3b30;}
+.feed-time{margin-left:auto;font-size:11px;color:#8e8e93;}
+.feed-comments{margin-top:9px;background:#f2f2f7;border-radius:12px;padding:8px 12px;}
+.feed-comment-line{font-size:12.5px;color:#3a3a3c;line-height:1.7;word-break:break-word;cursor:pointer;}
 .feed-comment-line:active{background:rgba(0,0,0,0.05);}
-.feed-comment-who{color:#5b6a8a;font-weight:600;}
-.feed-likes-line{font-size:12px;color:#8b8f96;margin-top:4px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
-.feed-like-heart{width:12px;height:12px;fill:#ff4d4f;stroke:none;}
-.moments-bottom-nav{position:absolute;bottom:0;left:0;width:100%;height:calc(55px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #f0f0f0;display:flex;justify-content:space-around;align-items:flex-start;padding-top:8px;padding-bottom:env(safe-area-inset-bottom,8px);z-index:100;}
+.feed-comment-who{color:#111;font-weight:600;}
+.feed-likes-line{font-size:12px;color:#8e8e93;margin-top:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.feed-like-heart{width:12px;height:12px;fill:#ff3b30;stroke:none;}
+.moments-bottom-nav{position:absolute;bottom:0;left:0;width:100%;height:calc(55px + env(safe-area-inset-bottom));background:rgba(255,255,255,0.92);backdrop-filter:blur(14px);border-top:0.5px solid rgba(0,0,0,0.1);display:flex;justify-content:space-around;align-items:flex-start;padding-top:8px;padding-bottom:env(safe-area-inset-bottom,8px);z-index:100;}
 .moments-nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:#aaa;cursor:pointer;width:60px;}
 .moments-nav-item svg{width:22px;height:22px;stroke:#aaa;fill:none;stroke-width:1.5;}
 .moments-nav-item.active{color:#333;font-weight:600;}
@@ -3990,7 +3991,7 @@ function buildMessageElement(msg,prevMsg,nextMsg){
   let readStatusHtml='';
   const isLastRight=msg.side==='right'&&(!nextMsg||nextMsg.side!=='right'||nextMsg.type==='system'||nextMsg.type==='pat');
   if(isLastRight) {
-    readStatusHtml = `<span class="read-status-outside read" onclick="event.stopPropagation();toggleReadStatus(this)">已读</span>`;
+    readStatusHtml = `<span class="read-status-outside read" title="已读" onclick="event.stopPropagation();toggleReadStatus(this)"><svg class="double-check" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 13 6.5 17.5 14.5 8"></polyline><polyline points="8.5 15.5 11 18 21 8.5"></polyline></svg></span>`;
   }
   
   let quoteHtml='';
@@ -4043,8 +4044,9 @@ function renderMessages(){
   renderHomeChatPreview();
 }
 function sendImageMessage(url){
-  const msg={id:createMessageId(),side:'right',type:'image',url,text:'[图片]',quote:quoteMessageObj?{...quoteMessageObj}:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()};
+  const msg={id:createMessageId(),side:'right',type:'image',url,text:'[图片]',stealable:'emoji',quote:quoteMessageObj?{...quoteMessageObj}:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()};
   messages.push(msg);renderMessages();cancelQuote();lastActivityTime=Date.now();
+  maybeTaSteal(msg);
   showTypingIndicator();
   setTimeout(()=>{
     hideTypingIndicator();
@@ -4152,8 +4154,10 @@ function sendPinziCards(){
   for(let i=0;i<count;i++){picked.push(pool[Math.floor(Math.random()*pool.length)].content);}
   picked.forEach((text,i)=>{
     setTimeout(()=>{
-      messages.push({id:createMessageId(),side:'right',text,quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
+      const cm={id:createMessageId(),side:'right',text,stealable:'card',quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()};
+      messages.push(cm);
       renderMessages();saveMessages();renderHomeChatPreview();lastActivityTime=Date.now();
+      maybeTaSteal(cm);
     },i*240);
   });
   showToast(`拼字卡：连发 ${count} 条`);
@@ -4161,12 +4165,47 @@ function sendPinziCards(){
     setTimeout(()=>{sendTaReplyBatch(rangeRandom(msgCountMin,Math.max(msgCountMin,msgCountMax)));},count*240+getReplyDelay());
   }
 }
+// ================= TA 偷字卡 / 偷表情包 =================
+// 我发出的字卡文本或表情包图片，TA 有概率偷走，动作显示在聊天记录里；偷走后会进 TA 的回复池
+function maybeTaSteal(msg){
+  if(!msg||msg.side!=='right'||msg.revoked) return;
+  let kind=null,payload=null;
+  if(msg.stealable==='emoji'&&msg.type==='image'){kind='emoji';payload=msg.url;}
+  else if(msg.stealable==='card'&&msg.text){kind='card';payload=msg.text;}
+  if(!kind||!payload) return;
+  if(kind==='emoji'&&(emojiData.ta||[]).includes(payload)) return; // 已偷过
+  if(kind==='card'&&(taEmojis||[]).some(e=>e&&e.content===payload)) return;
+  if(Math.random()>0.4) return; // 40% 概率下手
+  if(kind==='emoji'){emojiData.ta=emojiData.ta||[];emojiData.ta.push(payload);saveEmojiData();}
+  else{taEmojis=taEmojis||[];taEmojis.push({content:payload,locked:false,stolen:true});saveData();}
+  setTimeout(()=>{
+    const label=kind==='emoji'?'你的表情包':`你的字卡「${truncateQuoteText(payload)}」`;
+    messages.push({id:createMessageId(),side:'left',type:'system',text:`${nameTa} 偷走了${label} 🤫`,timestamp:Date.now()});
+    renderMessages();saveMessages();renderHomeChatPreview();
+    // 偷完偶尔立刻发回来炫耀
+    if(kind==='emoji'&&Math.random()<0.5){
+      setTimeout(()=>{
+        messages.push({id:createMessageId(),side:'left',type:'image',url:payload,text:'[图片]',quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
+        renderMessages();saveMessages();renderHomeChatPreview();
+      },900+Math.random()*1500);
+    }
+    if(kind==='card'&&Math.random()<0.4){
+      setTimeout(()=>{
+        messages.push({id:createMessageId(),side:'left',text:payload,quote:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()});
+        renderMessages();saveMessages();renderHomeChatPreview();
+      },900+Math.random()*1500);
+    }
+  },1500+Math.random()*2500);
+}
 function sendMessage(){
   const input=document.getElementById('message-input');
   const text=input.value.trim();
   if(!text) return;
   const msg={id:createMessageId(),side:'right',text,quote:quoteMessageObj?{...quoteMessageObj}:null,revoked:false,revokedText:'',revokedSide:'',timestamp:Date.now()};
+  // 若内容命中字卡库，标记为可被偷走的字卡
+  if((wordCards||[]).some(c=>c&&c.content===text&&!c.locked)) msg.stealable='card';
   messages.push(msg);renderMessages();cancelQuote();input.value='';lastActivityTime=Date.now();
+  maybeTaSteal(msg);
   showTypingIndicator();
   setTimeout(()=>{
     hideTypingIndicator();
@@ -4706,11 +4745,11 @@ function toggleReadStatus(el){
   if(el.classList.contains('read')){
     el.classList.remove('read');
     el.classList.add('unread');
-    el.innerText='未读';
+    el.title='未读';
   }else{
     el.classList.remove('unread');
     el.classList.add('read');
-    el.innerText='已读';
+    el.title='已读';
   }
 }
 function getRandomReply(){
